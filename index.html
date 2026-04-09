@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klinik Enzimoloji | 50 Soruluk Dev Sınav</title>
+    <style>
+        :root { --primary: #1a73e8; --secondary: #5f6368; --bg: #f1f3f4; --card: #ffffff; --success: #34a853; --error: #ea4335; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; display: flex; justify-content: center; min-height: 100vh; }
+        #quiz-container { background: var(--card); max-width: 600px; width: 100%; margin: 20px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
+        .header { border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .question-box { margin-bottom: 20px; }
+        .question-text { font-size: 1.2rem; font-weight: 600; color: #202124; line-height: 1.4; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+        .option { padding: 15px; border: 2px solid #dadce0; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+        .option:hover { background-color: #f8f9fa; border-color: var(--primary); }
+        .option.correct { background-color: #e6f4ea; border-color: var(--success); color: #137333; }
+        .option.wrong { background-color: #fce8e6; border-color: var(--error); color: #c5221f; }
+        .footer { margin-top: 30px; text-align: right; }
+        button { padding: 12px 25px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #result-screen { display: none; text-align: center; padding: 40px 0; }
+        .progress-bar { height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
+        @media (max-width: 480px) { #quiz-container { margin: 10px; padding: 15px; } .question-text { font-size: 1.1rem; } }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div id="game-ui">
+        <div class="header">
+            <h3 style="margin:0; color:var(--primary);">Klinik Enzimoloji</h3>
+            <span id="counter" style="font-weight:bold; color:var(--secondary);">1 / 50</span>
+        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <div class="question-box">
+            <div id="question-text" class="question-text">Soru yükleniyor...</div>
+        </div>
+        <div id="options-container" class="options-grid"></div>
+        <div class="footer">
+            <button id="next-btn" onclick="nextQuestion()" style="display:none;">Sonraki Soru →</button>
+        </div>
+    </div>
+
+    <div id="result-screen">
+        <h1 style="color:var(--primary);">Sınav Bitti!</h1>
+        <p style="font-size:1.4rem;">Doğru Sayısı: <span id="correct-count">0</span> / 50</p>
+        <p id="performance-msg"></p>
+        <button onclick="location.reload()">Tekrar Dene</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Klinik enzimolojide bir enzimin plazma aktivitesinin artması temel olarak hangisine bağlıdır?", o: ["Sentez azalması", "Hücre hasarı sonucu sızıntı", "Atılım artışı", "Yarı ömür kısalması", "İnhibitör artışı"], c: 1 },
+        { q: "Hangi enzim karaciğer hasarına (hepatoselüler) en spesifiktir?", o: ["AST", "ALT", "ALP", "LDH", "GGT"], c: 1 },
+        { q: "Alkol kullanımına bağlı karaciğer hasarında en duyarlı enzim?", o: ["Amilaz", "GGT", "ALT", "Lipaz", "ACP"], c: 1 },
+        { q: "Isıya en duyarlı (termolabil) ALP izoenzimi hangisidir?", o: ["Karaciğer", "Bağırsak", "Plasenta", "Kemik", "Böbrek"], c: 3 },
+        { q: "Akut pankreatit tanısında spesifikliği en yüksek enzim?", o: ["Amilaz", "Lipaz", "AST", "LDH", "CK"], c: 1 },
+        { q: "CK-MB izoenzimi temel olarak hangi dokuda bulunur?", o: ["Beyin", "İskelet Kas", "Kalp Kası", "Akciğer", "Karaciğer"], c: 2 },
+        { q: "Hemolizli kanda hangi enzim hatalı yüksek çıkar?", o: ["GGT", "LDH", "ALP", "Amilaz", "ALT"], c: 1 },
+        { q: "Organofosfat zehirlenmesinde hangi enzim aktivitesi düşer?", o: ["LDH", "ALT", "Kolinesteraz", "ALP", "AST"], c: 2 },
+        { q: "Kemik büyümesi veya raşitizmde hangi enzim yükselir?", o: ["ACP", "ALP", "ALT", "Lipaz", "CK"], c: 1 },
+        { q: "Prostat kanseri takibinde kullanılan klasik enzim?", o: ["AST", "ACP (Asit Fosfataz)", "GGT", "LDH", "ALT"], c: 1 },
+        { q: "Laktat Dehidrogenaz (LDH) kaç izoenzime sahiptir?", o: ["2", "3", "4", "5", "6"], c: 3 },
+        { q: "Kalp krizinde LDH izoenzimlerinde görülen özel durum?", o: ["LDH-5 artışı", "LDH-1 > LDH-2 (Flipped)", "LDH-3 kaybı", "Tümünün azalması", "LDH-4 artışı"], c: 1 },
+        { q: "U (Ünite) tanımı nedir?", o: ["1 gr enzim", "1 dk'da 1 mikromol substrat dönüşümü", "100 ml kandaki miktar", "Enzimin ağırlığı", "Hücre sayısı"], c: 1 },
+        { q: "Kas distrofisinde (Duchenne) hangi enzim aşırı yükselir?", o: ["ALT", "ALP", "CK", "GGT", "Amilaz"], c: 2 },
+        { q: "Hangi madde CK aktivasyonu için ölçümde kullanılır?", o: ["Çinko", "N-asetil sistein (NAC)", "Demir", "Bakır", "Kalsiyum"], c: 1 },
+        { q: "Wilson hastalığında hangi bakır taşıyıcı protein düşüktür?", o: ["Albumin", "Seruloplazmin", "Haptoglobin", "Transferrin", "CRP"], c: 1 },
+        { q: "Makro-amilazemi durumunda amilaz neden kanda yüksektir?", o: ["Aşırı üretim", "Böbrekten atılamama (Ig'ye bağlı)", "Kanser", "Genetik eksiklik", "Karaciğer hasarı"], c: 1 },
+        { q: "Kompetitif inhibisyonda Km değeri nasıl değişir?", o: ["Azalır", "Değişmez", "Artar", "Sıfırlanır", "Yarıya iner"], c: 2 },
+        { q: "LDH-5 en çok nerede bulunur?", o: ["Kalp", "Beyin", "Karaciğer ve İskelet Kası", "Eritrosit", "Akciğer"], c: 2 },
+        { q: "Gebelikte hangi ALP izoenzimi yükselir?", o: ["Kemik", "Karaciğer", "Plasental", "Böbrek", "Bağırsak"], c: 2 },
+        { q: "Paget hastalığında hangi enzim çok yüksektir?", o: ["ALT", "ALP", "Amilaz", "Lipaz", "GGT"], c: 1 },
+        { q: "Enzimin protein kısmına ne ad verilir?", o: ["Koenzim", "Kofaktör", "Apoenzim", "Holoenzim", "Prostetik grup"], c: 2 },
+        { q: "Sıfırıncı derece kinetik neyi ifade eder?", o: ["Substrat bitti", "Hız substrata doydu", "Enzim yok", "pH hatalı", "Sıcaklık düşük"], c: 1 },
+        { q: "Kalp krizinden sonra kanda en uzun süre yüksek kalan?", o: ["CK-MB", "Miyoglobin", "LDH", "AST", "ALT"], c: 2 },
+        { q: "İdrarda amilaz artışı neyi düşündürür?", o: ["Hepatit", "MI", "Akut Pankreatit", "Kas ağrısı", "Kemik kırığı"], c: 2 },
+        { q: "CK-BB izoenzimi nerede bulunur?", o: ["Kalp", "İskelet kası", "Beyin", "Akciğer", "Karaciğer"], c: 2 },
+        { q: "L-Tartrat hangi enzimi inhibe eder?", o: ["ALP", "Prostatik ACP", "ALT", "CK", "Lipaz"], c: 1 },
+        { q: "Egzersiz sonrası hangi enzimler yükselir?", o: ["CK ve AST", "ALP ve GGT", "Amilaz", "ACP", "Lipaz"], c: 0 },
+        { q: "LDH-1 ve LDH-2 hangi hücrelerde boldur?", o: ["Eritrosit ve Kalp", "Karaciğer", "Pankreas", "Deri", "Kemik"], c: 0 },
+        { q: "Safra yolu tıkanıklığında (Kolestaz) hangi ikili yükselir?", o: ["ALT-AST", "ALP-GGT", "CK-LDH", "Amilaz-Lipaz", "ACP-PSA"], c: 1 },
+        { q: "Enzimlerin katalitik hızı için optimum ne önemlidir?", o: ["Sadece ışık", "pH ve Sıcaklık", "Renk", "Koku", "Hacim"], c: 1 },
+        { q: "Aktivasyon için metal iyonuna ihtiyaç duyan enzim parçası?", o: ["Apoenzim", "Kofaktör", "İzoenzim", "Substrat", "Ürün"], c: 1 },
+        { q: "Miyokard infarktüsünde AST artışı ne zaman başlar?", o: ["1 saat", "6-12 saat", "48 saat", "1 hafta", "Hemen"], c: 1 },
+        { q: "Alkoliklerde AST/ALT oranı genellikle kaçtır?", o: ["< 1", "1", "> 2", "0.1", "0"], c: 2 },
+        { q: "Akut hepatitte enzimler hangi seviyeye çıkar?", o: ["2 kat", "Normal", "10-100 kat", "Yarıya iner", "Değişmez"], c: 2 },
+        { q: "Prostat spesifik antijen (PSA) ne için kullanılır?", o: ["Kalp krizi", "Hepatit", "Prostat CA tarama", "Pankreatit", "Kas hasarı"], c: 2 },
+        { q: "Elektroforezde anoda en hızlı giden CK?", o: ["CK-MM", "CK-MB", "CK-BB", "Makro-CK", "CK-Mt"], c: 2 },
+        { q: "LDH-4 ve LDH-5 hangi saklama koşuluna duyarlıdır?", o: ["Sıcaklık", "Işık", "Soğukta bekletme (4°C)", "Nem", "Vakum"], c: 2 },
+        { q: "Enzimlerin 'Lag Phase' dönemi nedir?", o: ["Bitiş", "Sabit hız öncesi ısınma", "Ölüm", "Doygunluk", "Yavaşlama"], c: 1 },
+        { q: "Pankreas amilazı ile tükürük amilazı farkı?", o: ["İşlev aynı yapı farklı", "Biri enzim değil", "Biri kanda yok", "Biri idrarda yok", "Fark yok"], c: 0 },
+        { q: "Karaciğer sentez kapasitesini gösteren enzim?", o: ["ALT", "AST", "Psödokolinesteraz", "GGT", "ALP"], c: 2 },
+        { q: "Kreatin Kinazın fonksiyonu nedir?", o: ["Şeker yakmak", "ATP depolama (Enerji transferi)", "Yağ sindirimi", "Protein sentezi", "Oksijen taşıma"], c: 1 },
+        { q: "Michaelis-Menten sabiti (Km) neyi gösterir?", o: ["Maksimum hızı", "Enzimin substrata ilgisini", "Sıcaklığı", "pH değerini", "Enzim miktarını"], c: 1 },
+        { q: "Holoenzim formülü hangisidir?", o: ["Apoenzim - Kofaktör", "Sadece kofaktör", "Apoenzim + Kofaktör", "Substrat + Ürün", "İnhibitör + Enzim"], c: 2 },
+        { q: "Kemik metastazında hangi ALP ve ACP durumu görülür?", o: ["İkisi de düşük", "İkisi de yüksek", "ALP düşük", "ACP normal", "Değişmez"], c: 1 },
+        { q: "Lipaz enzimi kanda ne kadar süre yüksek kalır?", o: ["1 saat", "24 saat", "7-14 gün", "1 ay", "5 dakika"], c: 2 },
+        { q: "Sıfırıncı derece kinetikte reaksiyon hızı neye bağlıdır?", o: ["Substrat", "Sadece Enzim Konsantrasyonu", "Işık", "Hacim", "Kofaktör yokluğu"], c: 1 },
+        { q: "Enzim aktivitesini artıran maddelere ne denir?", o: ["İnhibitör", "Aktivatör", "Substrat", "Ürün", "Kofaktör"], c: 1 },
+        { q: "Normal plazmada en çok bulunan CK izoenzimi?", o: ["CK-BB", "CK-MB", "CK-MM", "CK-Mt", "Hepsi eşit"], c: 2 },
+        { q: "Klinik enzimolojide numune alırken neye dikkat edilmeli?", o: ["Açlık gerekmez", "Antikoagülan seçimi ve hemoliz önleme", "Işıklı ortam", "Sıcak kan", "Hızlı sarsma"], c: 1 }
+    ];
+
+    let current = 0;
+    let score = 0;
+
+    function renderQuestion() {
+        const q = questions[current];
+        document.getElementById("counter").innerText = `${current + 1} / 50`;
+        document.getElementById("progress-fill").style.width = `${((current + 1) / 50) * 100}%`;
+        document.getElementById("question-text").innerText = q.q;
+        
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+        document.getElementById("next-btn").style.display = "none";
+
+        q.o.forEach((opt, index) => {
+            const div = document.createElement("div");
+            div.className = "option";
+            div.innerText = `${String.fromCharCode(65 + index)}) ${opt}`;
+            div.onclick = () => selectOption(index, div);
+            container.appendChild(div);
+        });
+    }
+
+    function selectOption(idx, el) {
+        const correct = questions[current].c;
+        const options = document.querySelectorAll(".option");
+        
+        // Diğer tıklamaları engelle
+        options.forEach(o => o.style.pointerEvents = "none");
+
+        if(idx === correct) {
+            el.classList.add("correct");
+            score++;
+        } else {
+            el.classList.add("wrong");
+            options[correct].classList.add("correct");
+        }
+        document.getElementById("next-btn").style.display = "block";
+    }
+
+    function nextQuestion() {
+        current++;
+        if(current < questions.length) {
+            renderQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("game-ui").style.display = "none";
+        const screen = document.getElementById("result-screen");
+        screen.style.display = "block";
+        document.getElementById("correct-count").innerText = score;
+        
+        let msg = "";
+        if(score > 45) msg = "mami helal lan.";
+        else if(score > 35) msg = "mami fena değil kardesim.";
+        else if(score > 25) msg = "mami kafani sikim.";
+        else msg = "sinava girme kanka.";
+        document.getElementById("performance-msg").innerText = msg;
+    }
+
+    renderQuestion();
+</script>
+
+</body>
+</html>
