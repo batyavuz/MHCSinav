@@ -3,26 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tıbbi Biyokimya | Final Versiyon (195 Soru)</title>
+    <title>Biyokimya Pro | Mami Edition</title>
     <style>
-        :root { --primary: #1a73e8; --secondary: #5f6368; --bg: #f1f3f4; --card: #ffffff; --success: #34a853; --error: #ea4335; --gold: #ffd700; }
-        body { font-family: 'Segoe UI', sans-serif; background-color: var(--bg); margin: 0; display: flex; justify-content: center; min-height: 100vh; }
-        #quiz-container { background: var(--card); max-width: 600px; width: 100%; margin: 20px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; }
-        .header { border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .question-text { font-size: 1.2rem; font-weight: 600; color: #202124; line-height: 1.4; }
-        .options-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
-        .option { padding: 15px; border: 2px solid #dadce0; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
-        .option:hover { background-color: #f8f9fa; border-color: var(--primary); }
-        .option.correct { background-color: #e6f4ea; border-color: var(--success); color: #137333; }
-        .option.wrong { background-color: #fce8e6; border-color: var(--error); color: #c5221f; }
-        .footer { margin-top: 30px; text-align: right; }
-        button { padding: 12px 25px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #1557b0; }
-        #motivation-screen, #result-screen { display: none; text-align: center; padding: 40px 20px; }
-        .progress-bar { height: 6px; background: #eee; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s; }
-        .easter-egg { font-size: 0.7rem; color: #eee; position: absolute; bottom: 5px; left: 5px; cursor: default; }
-        .easter-egg:hover { color: var(--gold); }
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --secondary: #94a3b8;
+            --accent: #f472b6;
+            --success: #22c55e;
+            --error: #ef4444;
+            --text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        #quiz-container {
+            background: var(--card-bg);
+            max-width: 650px;
+            width: 100%;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .counter-badge {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .progress-container {
+            height: 8px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: #fff;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .option.correct {
+            background: rgba(34, 197, 94, 0.15) !important;
+            border-color: var(--success) !important;
+            color: #4ade80;
+        }
+
+        .option.wrong {
+            background: rgba(239, 68, 68, 0.15) !important;
+            border-color: var(--error) !important;
+            color: #f87171;
+        }
+
+        .footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        #motivation-screen, #result-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 10px;
+        }
+
+        .mami-alert {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .easter-egg {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.1);
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
@@ -30,39 +170,41 @@
 <div id="quiz-container">
     <div id="game-ui">
         <div class="header">
-            <h3 style="margin:0; color:var(--primary);">Biyokimya Karma Sınav</h3>
-            <span id="counter" style="font-weight:bold; color:var(--secondary);">1 / 195</span>
+            <div class="title">BIYOKIMYA<span style="color:var(--accent)">PRO</span></div>
+            <div class="counter-badge" id="counter">1 / 195</div>
         </div>
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <div id="question-text" class="question-text">Soru yükleniyor...</div>
+        <div class="progress-container">
+            <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div id="question-text" class="question-text">Yükleniyor...</div>
         <div id="options-container" class="options-grid"></div>
         <div class="footer">
-            <button id="next-btn" onclick="nextStep()" style="display:none;">Sonraki →</button>
+            <button id="next-btn" onclick="nextStep()" style="display:none;">DEVAM ET →</button>
         </div>
     </div>
 
     <div id="motivation-screen">
-        <h2 style="color:var(--primary);">Hadi mami!</h2>
-        <p style="font-size:1.3rem; line-height:1.6;">Yapabilirsin kardesim ben sana guveniyorum. <br>Biyokimya senin işin! 🔥</p>
-        <button onclick="resumeQuiz()">Devam Et Mami!</button>
+        <div class="mami-alert">HADİ MAMİ! 🔥</div>
+        <p style="font-size:1.2rem; color: var(--secondary); margin-bottom: 30px;">Yapabilirsin kardeşim, ben sana güveniyorum.<br>Kaldığın yerden parçalamaya devam!</p>
+        <button onclick="resumeQuiz()">TAMAMDIR, DEVAM!</button>
     </div>
 
     <div id="result-screen">
-        <h1 style="color:var(--primary);">Sınav Bitti!</h1>
-        <p style="font-size:1.4rem;">Doğru Sayısı: <span id="correct-count">0</span> / 195</p>
-        <p id="performance-msg"></p>
-        <button onclick="location.reload()">Baştan Başla</button>
+        <div class="mami-alert">SINAV BİTTİ</div>
+        <p style="font-size:1.5rem; margin-bottom: 10px;">Skorun: <span id="correct-count" style="color:var(--primary)">0</span> / 195</p>
+        <p id="performance-msg" style="color: var(--secondary); margin-bottom: 30px;"></p>
+        <button onclick="location.reload()">BAŞTAN BAŞLA</button>
     </div>
     
-    <div class="easter-egg" title="ATP sentezleniyor...">Krebse selam, mamiye devam...</div>
+    <div class="easter-egg">ATP-MAMI-FORCE-v3.0</div>
 </div>
 
 <script>
     const questions = [
-        // --- KLİNİK ENZİMOLOJİ & GENEL (15) ---
+        // --- KLİNİK ENZİMOLOJİ (Dengeli Şıklar) ---
         { q: "Isıya en duyarlı (termolabil) ALP izoenzimi hangisidir?", o: ["Karaciğer", "Bağırsak", "Plasenta", "Kemik", "Böbrek"], c: 3 },
         { q: "Organofosfat zehirlenmesinde hangi enzim aktivitesi düşer?", o: ["LDH", "ALT", "Kolinesteraz", "ALP", "AST"], c: 2 },
-        { q: "L-Tartrat hangi enzimi (özellikle prostatik fraksiyonu) inhibe eder?", o: ["ALP", "Asit Fosfataz (ACP)", "ALT", "CK", "Lipaz"], c: 1 },
+        { q: "L-Tartrat hangi enzimi inhibe eder?", o: ["ALP", "Asit Fosfataz (ACP)", "ALT", "CK", "Lipaz"], c: 1 },
         { q: "Kalp krizinde LDH izoenzimlerinde görülen 'Flipped Pattern' nedir?", o: ["LDH-5 artışı", "LDH-1 > LDH-2", "LDH-3 kaybı", "Tümünün azalması", "LDH-4 artışı"], c: 1 },
         { q: "Hangi madde CK aktivasyonu için ölçümde (reaktifte) kullanılır?", o: ["Çinko", "N-asetil sistein (NAC)", "Demir", "Bakır", "Kalsiyum"], c: 1 },
         { q: "Makro-amilazemi durumunda amilaz neden kanda yüksektir?", o: ["Aşırı üretim", "Böbrekten atılamama (Ig'ye bağlanma)", "Kanser", "Genetik eksiklik", "Karaciğer hasarı"], c: 1 },
@@ -74,26 +216,26 @@
         { q: "Enzim ölçümlerinde 'Lag Phase' dönemi neyi tanımlar?", o: ["Reaksiyonun durması", "Sabit hız öncesi aktivasyon süresi", "Enzimin denatürasyonu", "Doygunluk", "Ürün inhibisyonu"], c: 1 },
         { q: "Michaelis-Menten denkleminde Km neye eşittir?", o: ["Vmax", "1/2 Vmax'a ulaşılan substrat konsantrasyonu", "Toplam enzim miktarı", "Ürün hızı", "Denge sabiti"], c: 1 },
         { q: "Kreatin Kinazın temel biyokimyasal fonksiyonu nedir?", o: ["Glikoliz", "ATP depolama/Enerji transferi", "Lipoliz", "Üre sentezi", "Oksijen taşıma"], c: 1 },
-        { q: "Alkolik karaciğer hasarında De Ritis oranı (AST/ALT) genellikle nasıldır?", o: ["< 1", "1", "> 2", "0.5", "Sıfır"], c: 2 },
+        { q: "Alkolik karaciğer hasarında De Ritis oranı (AST/ALT) genellikle nasıldır?", o: ["Sıfır", "1", "> 2", "0.5", "< 1"], c: 2 },
 
-        // --- HORMON GİRİŞ & SİNYAL (15) ---
-        { q: "Hücrenin sentezlediği maddenin, yine aynı hücre üzerindeki reseptöre bağlanarak etki etmesine ne ad verilir?", o: ["Endokrin", "Parakrin", "Otokrin", "Nörokrin", "Ekzokrin"], c: 2 },
-        { q: "Aşağıdakilerden hangisi aminoasit türevi (tirozinden türeyen) bir hormondur?", o: ["İnsülin", "Östrojen", "Epinefrin", "Kortizol", "Glukagon"], c: 2 },
-        { q: "Steroid hormonlar için hangisi yanlıştır?", o: ["Kolesterolden sentezlenirler", "Depo edilmezler", "Reseptörleri hücre içindedir", "Suda çok iyi çözünürler", "Yarı ömürleri uzundur"], c: 3 },
-        { q: "Hormonların hedef hücrede sayıca azalmasına (duyarlılık kaybı) ne denir?", o: ["Up-regülasyon", "Down-regülasyon", "Feedback", "Sinerji", "Permisif etki"], c: 1 },
+        // --- HORMONLAR VE SİNYAL İLETİMİ ---
+        { q: "Hücrenin sentezlediği maddenin, yine aynı hücre üzerindeki reseptöre bağlanarak etki etmesine ne denir?", o: ["Parakrin", "Ekzokrin", "Otokrin", "Endokrin", "Nörokrin"], c: 2 },
+        { q: "Aşağıdakilerden hangisi tirozinden türeyen bir hormondur?", o: ["İnsülin", "Glukagon", "Epinefrin", "Östrojen", "Kortizol"], c: 2 },
+        { q: "Steroid hormonlar için hangisi yanlıştır?", o: ["Kolesterolden sentezlenirler", "Reseptörleri hücre içindedir", "Depo edilirler", "Suda az çözünürler", "Yarı ömürleri uzundur"], c: 2 },
+        { q: "Hormonların hedef hücrede sayıca azalmasına ne denir?", o: ["Up-regülasyon", "Down-regülasyon", "Feedback", "Sinerji", "Permisif"], c: 1 },
         { q: "Protein yapılı hormonların sentezi nerede başlar?", o: ["Mitokondri", "Ribozom (RER)", "Golgi", "Sitoplazma", "Düz ER"], c: 1 },
-        { q: "Kanda taşıyıcı proteine en az ihtiyaç duyan hormon grubu hangisidir?", o: ["Steroidler", "Tiroid hormonları", "Katekolaminler ve Peptitler", "D vitamini", "Retinoik asit"], c: 2 },
-        { q: "Hormon salınımının 'Pulsatil' olması neyi ifade eder?", o: ["Sürekli salınımı", "Kesikli/Aralıklı salınımı", "Sadece gece salınımı", "Sadece yemekten sonra", "Depo edilmemesini"], c: 1 },
-        { q: "Negatif Feedback mekanizması temel olarak neyi amaçlar?", o: ["Hormonu bitirmeyi", "Sürekli artışı", "Homeostazisi korumayı", "Reseptör sayısını artırmayı", "Hücreyi öldürmeyi"], c: 2 },
         { q: "Gq proteini aktifleştiğinde hangi yolu tetikler?", o: ["cAMP artışı", "cAMP azalışı", "IP3 ve DAG oluşumu", "cGMP artışı", "İyon kanalı"], c: 2 },
-        { q: "IP3 sitozolde neyin salınımını sağlar?", o: ["Na+", "K+", "Ca2+ (ER'den)", "Mg2+", "Cl-"], c: 2 },
+        { q: "IP3 sitozolde neyin salınımını sağlar?", o: ["Sodyum", "Potasyum", "Kalsiyum", "Magnezyum", "Klor"], c: 2 },
         { q: "Hücre içi cAMP düzeyini düşüren (parçalayan) enzim?", o: ["Adenilat Siklaz", "Fosfodiesteraz", "Protein Kinaz C", "G-proteini", "Kalmodulin"], c: 1 },
         { q: "İnsülin reseptörü hangi tip reseptör yapısındadır?", o: ["İyon kanalı", "G-proteini kenetli", "İntrasellüler", "İntrinsik Tirozin Kinaz", "Nükleer"], c: 3 },
-        { q: "Steroid ve tiroid hormonlarının reseptörleri nerede bulunur?", o: ["Hücre zarı", "Mitokondri zarı", "Sitozol veya Çekirdek", "Ribozom", "Lizozom"], c: 2 },
-        { q: "Jak-Stat sinyal yolu hangi hormonlar için karakteristiktir?", o: ["Steroidler", "Büyüme Hormonu ve Prolaktin", "Epinefrin", "Asetilkolin", "Tiroid hormonları"], c: 1 },
-        { q: "İnsülin sinyalinde IRS-1 proteininin fosforillenmesi hangi yolu başlatır?", o: ["cAMP yolu", "PI3-Kinaz yolu", "Gq yolu", "Jak-Stat yolu", "Sadece iyon yolu"], c: 1 },
+        { q: "G-proteini alfa alt birimi hangi durumda inaktiftir?", o: ["GTP bağlıyken", "GDP bağlıyken", "Fosforillendiğinde", "cAMP'ye bağlandığında", "Ayrıldığında"], c: 1 },
+        { q: "Jak-Stat sinyal yolu hangi hormonlar için karakteristiktir?", o: ["Steroidler", "Büyüme Hormonu ve Prolaktin", "Epinefrin", "Asetilkolin", "Tiroid"], c: 1 },
+        { q: "Hormon salınımının 'Pulsatil' olması neyi ifade eder?", o: ["Sürekli salınımı", "Kesikli/Aralıklı salınımı", "Sadece gece", "Depolanmamasını", "Hızlı yıkımı"], c: 1 },
+        { q: "Aşağıdakilerden hangisi bir ikincil haberci değildir?", o: ["cAMP", "IP3", "DAG", "G-proteini", "Ca2+"], c: 3 },
+        { q: "Negatif Feedback mekanizması temel olarak neyi amaçlar?", o: ["Hormonu bitirmeyi", "Sürekli artışı", "Homeostazisi korumayı", "Yıkımı", "Ölümü"], c: 2 },
+        { q: "Kanda taşıyıcı proteine en az ihtiyaç duyan hormon grubu?", o: ["Steroidler", "Tiroid", "Peptit hormonlar", "D vitamini", "Retinoik asit"], c: 2 },
 
-        // --- HİPOFİZ & HİPOTALAMUS (30) ---
+        // --- HİPOFİZ & HİPOTALAMUS ---
         { q: "Nörohipofizden salınan hormonlar hangileridir?", o: ["ACTH-TSH", "FSH-LH", "Oksitosin-ADH", "GH-Prolaktin", "MSH"], c: 2 },
         { q: "GH salınımını inhibe eden hormon?", o: ["GHRH", "Somatostatin", "Dopamin", "TRH", "Kortizol"], c: 1 },
         { q: "Prolaktin üzerinde temel inhibitör kontrol sağlayan madde?", o: ["Serotonin", "Dopamin", "Asetilkolin", "GABA", "Oksitosin"], c: 1 },
@@ -125,7 +267,7 @@
         { q: "Dopamin eksikliğinde süt salınımı (laktasyon) nasıl değişir?", o: ["Durur", "Artar (Hiperprolaktinemi)", "Azalır", "Değişmez", "Hızlanır"], c: 1 },
         { q: "Nörofizinler ne işe yarar?", o: ["Enerji verir", "ADH ve Oksitosini taşır", "Reseptördür", "Enzimdir", "Hormon yıkar"], c: 1 },
 
-        // --- TİROİD (15) ---
+        // --- TİROİD ---
         { q: "İyodun tiroglobulindeki tirozinlere bağlanmasına ne denir?", o: ["Yakalama", "Organifikasyon", "Kenetlenme", "Proteoliz", "Deiyodinasyon"], c: 1 },
         { q: "Plazmada konsantrasyonu en yüksek tiroid hormonu?", o: ["T3", "T4", "rT3", "Kalsitonin", "TSH"], c: 1 },
         { q: "Tiroidin asıl aktif formu hangisidir?", o: ["T4", "T3", "rT3", "TBG", "TRH"], c: 1 },
@@ -142,7 +284,7 @@
         { q: "Pendred sendromu bulgusu?", o: ["Guatr + Sağırlık", "Cücelik", "Zeka geriliği", "Göz fırlaması", "Kellik"], c: 0 },
         { q: "Tiroid folikül hücrelerinin çevresindeki C hücreleri ne salgılar?", o: ["T3", "T4", "Kalsitonin", "PTH", "TSH"], c: 2 },
 
-        // --- ADRENAL MEDULLA (15) ---
+        // --- ADRENAL MEDULLA ---
         { q: "Adrenal medullanın %80'i nedir?", o: ["Noradrenalin", "Dopamin", "Adrenalin", "Serotonin", "GABA"], c: 2 },
         { q: "Katekolamin sentezinde hız kısıtlayıcı enzim?", o: ["PNMT", "Tirozin Hidroksilaz", "Dopa dekarboksilaz", "MAO", "COMT"], c: 1 },
         { q: "Noradrenalini Adrenaline çeviren enzim?", o: ["MAO", "PNMT", "COMT", "VMA", "TPO"], c: 1 },
@@ -159,7 +301,7 @@
         { q: "Katekolaminler veziküllerde ne ile birlikte depo edilir?", o: ["Albumin", "Kromogranin A ve ATP", "Hormon", "Su", "Yağ"], c: 1 },
         { q: "Adrenalin sentez yolu?", o: ["Tirozin-Dopa-Dopamin-NA-A", "Triptofan-Serotonin", "Glisin-Heme", "Arakidonik asit", "Kolesterol"], c: 0 },
 
-        // --- BÖBREK FONKSİYON (15) ---
+        // --- BÖBREK FONKSİYON ---
         { q: "GFR ölçümünde altın standart eksojen madde?", o: ["Kreatinin", "Üre", "İnulin", "Ürik asit", "Bilirubin"], c: 2 },
         { q: "Kreatinin nerede üretilen kreatinden gelir?", o: ["Karaciğer", "Kas", "Beyin", "Böbrek", "Akciğer"], c: 1 },
         { q: "Prerenal azotemide hangisi daha çok yükselir?", o: ["Kreatinin", "Üre (BUN)", "Ürik asit", "Glikoz", "İyonlar"], c: 1 },
@@ -176,90 +318,90 @@
         { q: "İdrar konsantrasyonu en iyi nasıl ölçülür?", o: ["Renk", "Osmolalite", "Hacim", "Bulanıklık", "Koku"], c: 1 },
         { q: "Böbreğin hormon salgılaması?", o: ["Endokrin fonksiyon", "Ekskresyon", "Regülasyon", "Sentez", "Yıkım"], c: 0 },
 
-        // --- ADRENAL KORTEKS (15) ---
-        { q: "Korteks tabakaları (dıştan içe)?", o: ["R-F-G", "G-F-R (Glomerüloza-Fasikülata-Retikularis)", "M-C", "K-M", "P-K"], c: 1 },
-        { q: "Z. Glomerüloza ne salgılar?", o: ["Kortizol", "Aldosteron", "DHEA", "Adrenalin", "İnsülin"], c: 1 },
-        { q: "Z. Fasikülata ne salgılar?", o: ["Aldosteron", "Kortizol", "Androjen", "NA", "A"], c: 1 },
-        { q: "Steroid sentezi ilk basamak?", o: ["Kolesterol -> Pregnenolon", "21-hidroksilasyon", "Aromatizasyon", "SCC", "Yıkım"], c: 0 },
-        { q: "Kortizol en yüksek ne zaman salınır?", o: ["Gece", "Sabah erken", "Öğle", "Akşam", "Egzersiz"], c: 1 },
-        { q: "Cushing sendromu sebebi?", o: ["Düşük kortizol", "Yüksek kortizol", "Düşük şeker", "Yüksek tuz", "Düşük TSH"], c: 1 },
+        // --- ADRENAL KORTEKS ---
+        { q: "Korteks tabakaları (dıştan içe)?", o: ["Retikularis-Fasikülata-Glomerüloza", "Glomerüloza-Fasikülata-Retikularis", "Medulla-Korteks", "Kapsül-Medulla", "Pelvis-Glomerüloza"], c: 1 },
+        { q: "Zona Glomerüloza ne salgılar?", o: ["Kortizol", "Aldosteron", "DHEA", "Adrenalin", "İnsülin"], c: 1 },
+        { q: "Zona Fasikülata ne salgılar?", o: ["Aldosteron", "Kortizol", "Androjen", "Noradrenalin", "Adrenalin"], c: 1 },
+        { q: "Steroid sentezi ilk basamak hangisidir?", o: ["Kolesterol -> Pregnenolon", "21-hidroksilasyon", "Aromatizasyon", "SCC enzim aktivasyonu", "İnhibisyon"], c: 0 },
+        { q: "Kortizol en yüksek ne zaman salınır?", o: ["Gece", "Sabah erken", "Öğle", "Akşam", "Egzersiz sonrası"], c: 1 },
+        { q: "Cushing sendromu sebebi hangisidir?", o: ["Düşük kortizol", "Yüksek kortizol", "Düşük şeker", "Yüksek tuz", "Düşük TSH"], c: 1 },
         { q: "Aldosteron sentaz (18-hidroksilaz) nerede bulunur?", o: ["Z. Glomerüloza", "Z. Fasikülata", "Medulla", "Beyin", "Böbrek"], c: 0 },
-        { q: "Kortizol taşıyıcı protein?", o: ["Albumin", "Transkortin (CBG)", "TBG", "Haptoglobin", "CRP"], c: 1 },
-        { q: "Addison hastalığı bulgusu?", o: ["Hipertansiyon", "Hiperpigmentasyon", "Zayıflık", "Kıllanma", "Aşırı enerji"], c: 1 },
-        { q: "Z. Retikularis ne salgılar?", o: ["Aldosteron", "Kortizol", "Androjenler (DHEA)", "Adrenalin", "TSH"], c: 2 },
+        { q: "Kortizol kanda temel olarak nereye bağlanır?", o: ["Albumin", "Transkortin (CBG)", "TBG", "Haptoglobin", "Seruloplazmin"], c: 1 },
+        { q: "Addison hastalığı tipik bulgusu?", o: ["Hipertansiyon", "Hiperpigmentasyon", "Zayıflık", "Kıllanma", "Kilo alma"], c: 1 },
+        { q: "Zona Retikularis ne salgılar?", o: ["Aldosteron", "Kortizol", "Androjenler (DHEA)", "Adrenalin", "TSH"], c: 2 },
         { q: "KAH (Konjenital Adrenal Hiperplazi) en sık eksik enzim?", o: ["17-hidroksilaz", "21-hidroksilaz", "11-hidroksilaz", "SCC", "PNMT"], c: 1 },
-        { q: "Kortizolün şeker etkisi?", o: ["Düşürür", "Artırır (Glikoneojenez)", "Etkilemez", "Yıkar", "Depolar"], c: 1 },
-        { q: "Steroid sentezi nerede olur (hücre içi)?", o: ["Ribozom", "Mitokondri ve SER", "Çekirdek", "Golgi", "Lizozom"], c: 1 },
-        { q: "Aldosteron sentezinde 17-alfa hidroksilaz var mıdır?", o: ["Evet", "Hayır", "Bazen", "Sadece kışın", "Sadece çocukta"], c: 1 },
-        { q: "ACTH eksikliğinde hangi hormon daha çok etkilenir?", o: ["Aldosteron", "Kortizol", "İnsülin", "Adrenalin", "Kalsitonin"], c: 1 },
+        { q: "Kortizolün glikoz üzerine etkisi?", o: ["Düşürür", "Artırır (Glikoneojenez)", "Etkilemez", "Yıkar", "Depolar"], c: 1 },
+        { q: "Steroid sentezi hücre içinde nerede olur?", o: ["Ribozom", "Mitokondri ve SER", "Çekirdek", "Golgi", "Lizozom"], c: 1 },
+        { q: "Aldosteron sentezinde 17-alfa hidroksilaz yer alır mı?", o: ["Evet", "Hayır", "Bazen", "Sadece erişkinde", "Sadece fetüste"], c: 1 },
+        { q: "ACTH eksikliği hangi hormonu daha çok etkiler?", o: ["Aldosteron", "Kortizol", "İnsülin", "Adrenalin", "Glukagon"], c: 1 },
 
-        // --- TAM İDRAR ANALİZİ (15) ---
-        { q: "İdeal idrar örneği?", o: ["Akşam", "Sabah ilk orta idrar", "Yemek sonrası", "24 saatlik", "Rastgele"], c: 1 },
+        // --- TAM İDRAR ANALİZİ ---
+        { q: "İdeal idrar örneği hangisidir?", o: ["Akşam", "Sabah ilk orta idrar", "Yemek sonrası", "24 saatlik", "Rastgele"], c: 1 },
         { q: "İdrar rengini veren pigment?", o: ["Bilirubin", "Ürokrom", "Melanin", "Hemoglobin", "Porfirin"], c: 1 },
-        { q: "İdrarda keton neyi gösterir?", o: ["Hepatit", "D. Ketoasidoz / Açlık", "Taş", "Enfeksiyon", "Su"], c: 1 },
-        { q: "İdrarda eritrosit silindirleri?", o: ["Enfeksiyon", "Glomerülonefrit", "Taş", "Normal", "Kanser"], c: 1 },
-        { q: "İdrar yolu enfeksiyonu belirteci (strip)?", o: ["Kan", "Lökosit esteraz ve Nitrit", "Şeker", "Protein", "Bilirubin"], c: 1 },
-        { q: "İdrarda Bence-Jones proteini?", o: ["Diyabet", "Multiple Miyelom", "Siroz", "Gastrit", "Kalp"], c: 1 },
-        { q: "İdrar yoğunluğu aleti?", o: ["Mikroskop", "Refraktometre", "Santrifüj", "Tartı", "Metre"], c: 1 },
-        { q: "Bekleyen idrarda pH neden yükselir?", o: ["Şekerden", "Bakteri / Amonyak oluşumu", "Proteinden", "Işıktan", "Soğuktan"], c: 1 },
-        { q: "İdrarda 'Zarf' şekilli kristal?", o: ["Ürik asit", "Kalsiyum oksalat", "Sistin", "Triple fosfat", "Kolesterol"], c: 1 },
-        { q: "İdrarda meyve kokusu?", o: ["Ketozis (Aseton)", "Enfeksiyon", "Normal", "Vitamin", "Alkol"], c: 0 },
-        { q: "İdrarda bilirubin görülmesi?", o: ["Normal", "Safra yolu tıkanıklığı / Hepatit", "Kas hasarı", "Kemik", "Diyabet"], c: 1 },
-        { q: "Bulanık idrar sebebi?", o: ["Sadece su", "Lökosit, bakteri, kristal", "Şeker", "Protein", "Alkol"], c: 1 },
-        { q: "İdrarda Miyoglobin?", o: ["Hepatit", "Kas yıkımı (Rabdovmiyoliz)", "Taş", "Nezle", "Grip"], c: 1 },
-        { q: "Normal idrarda Glikoz?", o: ["Bol", "Normalde bulunmaz", "Yarısı glikoztur", "Sadece yaşlıda olur", "Hızlıdır"], c: 1 },
-        { q: "İdrar stripi en çok hangi proteine duyarlı?", o: ["Globulin", "Albumin", "Hemoglobin", "Miyoglobin", "Bence-Jones"], c: 1 },
+        { q: "İdrarda keton neyi gösterir?", o: ["Hepatit", "D. Ketoasidoz / Açlık", "Taş", "Enfeksiyon", "Su içimi"], c: 1 },
+        { q: "İdrarda eritrosit silindirleri neyi gösterir?", o: ["Enfeksiyon", "Glomerülonefrit", "Taş", "Normal bulgu", "Kanser"], c: 1 },
+        { q: "İdrar yolu enfeksiyonu belirteci hangisidir?", o: ["Kan", "Lökosit esteraz ve Nitrit", "Şeker", "Protein", "Bilirubin"], c: 1 },
+        { q: "İdrarda Bence-Jones proteini hangi hastalıkta görülür?", o: ["Diyabet", "Multiple Miyelom", "Siroz", "Gastrit", "Kalp yetmezliği"], c: 1 },
+        { q: "İdrar yoğunluğu hangi aletle ölçülür?", o: ["Mikroskop", "Refraktometre", "Santrifüj", "Tartı", "Biyosensör"], c: 1 },
+        { q: "Bekleyen idrarda pH neden yükselir?", o: ["Şeker yıkımı", "Bakteriyel amonyak oluşumu", "Protein artışı", "Işık etkisi", "Soğuma"], c: 1 },
+        { q: "İdrarda 'Zarf' şekilli kristal hangisidir?", o: ["Ürik asit", "Kalsiyum oksalat", "Sistin", "Triple fosfat", "Kolesterol"], c: 1 },
+        { q: "İdrarda meyvemsi koku neyi işaret eder?", o: ["Ketozis (Aseton)", "Enfeksiyon", "Normal", "Vitamin", "Alkol"], c: 0 },
+        { q: "İdrarda bilirubin görülmesi hangi durumda olur?", o: ["Normal", "Safra yolu tıkanıklığı / Hepatit", "Kas hasarı", "Kemik yıkımı", "Diyabet"], c: 1 },
+        { q: "Bulanık idrarın temel sebebi nedir?", o: ["Aşırı su", "Lökosit, bakteri veya kristal", "Şeker", "Protein", "Alkol"], c: 1 },
+        { q: "İdrarda Miyoglobin hangi durumda görülür?", o: ["Hepatit", "Kas yıkımı (Rabdovmiyoliz)", "Böbrek taşı", "Nezle", "Halsizlik"], c: 1 },
+        { q: "Normal idrarda Glikoz durumu nedir?", o: ["Bol miktarda", "Normalde bulunmaz", "Yarısı glikoztur", "Sadece egzersizde olur", "Her zaman vardır"], c: 1 },
+        { q: "İdrar stripi en çok hangi proteine duyarlıdır?", o: ["Globulin", "Albumin", "Hemoglobin", "Miyoglobin", "Fibrinojen"], c: 1 },
 
-        // --- Ca/P METABOLİZMASI (15) ---
-        { q: "Vücut kalsiyumunun %99'u nerede?", o: ["Kan", "Kas", "Kemik (Hidroksiapatit)", "Beyin", "Hücre"], c: 2 },
-        { q: "Kalsiyumun aktif formu?", o: ["Bağlı", "Kompleks", "İyonize (Serbest)", "Fosfatlı", "Sitratlı"], c: 2 },
-        { q: "PTH kan kalsiyumunu ne yapar?", o: ["Düşürür", "Artırır", "Etkilemez", "Yıkar", "Depolar"], c: 1 },
-        { q: "Kalsitonin nerede sentezlenir?", o: ["Paratiroid", "Tiroid C hücreleri", "Hipofiz", "Böbrek", "Adrenal"], c: 1 },
-        { q: "D vitaminini aktifleştiği son yer?", o: ["Deri", "Karaciğer", "Böbrek", "Bağırsak", "Kemik"], c: 2 },
-        { q: "PTH böbrekte fosforu ne yapar?", o: ["Tutar", "Atar (Fosfatüri)", "Etkilemez", "Dengeler", "Yıkar"], c: 1 },
-        { q: "Hipokalsemide (düşük kalsiyum) görülen bulgu?", o: ["Felç", "Tetani", "Gevşeme", "Titreme", "Körlük"], c: 1 },
-        { q: "Çocuklarda D vitamini eksikliği?", o: ["Osteomalazi", "Raşitizm", "Osteoporoz", "Addison", "Paget"], c: 1 },
-        { q: "Pseudohipoparatiroidizm nedir?", o: ["PTH yok", "Hormon direnci (Son organ)", "D vit eksik", "Taş", "Kanser"], c: 1 },
-        { q: "PTH salınım uyarısı?", o: ["Yüksek Ca", "Düşük Ca (Hipokalsemi)", "Yüksek şeker", "Düşük tuz", "Düşük iyon"], c: 1 },
-        { q: "Kalsitonin kalsiyumu ne yapar?", o: ["Artırır", "Düşürür", "Etkilemez", "Sentezler", "Depolar"], c: 1 },
-        { q: "Magnezyum düşüklüğü PTH'ı ne yapar?", o: ["Artırır", "Baskılar (Salgıyı bozar)", "Etkilemez", "Hızlandırır", "Dengeler"], c: 1 },
-        { q: "Paget tedavisinde kullanılan hormon?", o: ["PTH", "Kalsitonin", "İnsülin", "Tiroksin", "Adrenalin"], c: 1 },
-        { q: "Kemikteki kristal yapı?", o: ["Oksalat", "Hidroksiapatit", "Ürat", "Sistin", "Fosfat"], c: 1 },
-        { q: "Kemikte kalsiyum tutan hücre?", o: ["Osteoklast", "Osteoblast", "Eritrosit", "Lökosit", "Nöron"], c: 1 },
+        // --- Ca/P METABOLİZMASI ---
+        { q: "Vücut kalsiyumunun %99'u nerededir?", o: ["Kan", "Kas", "Kemik (Hidroksiapatit)", "Beyin", "Lenf"], c: 2 },
+        { q: "Kalsiyumun biyolojik aktif formu hangisidir?", o: ["Bağlı kalsiyum", "Kompleks kalsiyum", "İyonize (Serbest)", "Fosfatlı", "Sitratlı"], c: 2 },
+        { q: "PTH kan kalsiyumunu ne yapar?", o: ["Düşürür", "Artırır", "Etkilemez", "Hücreye sokar", "Depolar"], c: 1 },
+        { q: "Kalsitonin nerede sentezlenir?", o: ["Paratiroid", "Tiroid C hücreleri", "Hipofiz", "Böbrek", "Adrenal medulla"], c: 1 },
+        { q: "D vitamininin aktifleştiği son organ hangisidir?", o: ["Deri", "Karaciğer", "Böbrek", "Bağırsak", "Dalak"], c: 2 },
+        { q: "PTH böbrekte fosforu ne yapar?", o: ["Geri emer", "Atar (Fosfatüri)", "Etkilemez", "Kemikte biriktirir", "Sentezler"], c: 1 },
+        { q: "Hipokalsemide görülen tipik bulgu?", o: ["Felç", "Tetani", "Kas gevşemesi", "Titreme", "Uyku"], c: 1 },
+        { q: "Çocuklarda D vitamini eksikliği sonucu oluşan hastalık?", o: ["Osteomalazi", "Raşitizm", "Osteoporoz", "Addison", "Kretinizm"], c: 1 },
+        { q: "Pseudohipoparatiroidizmde sorun nedir?", o: ["PTH sentezi yok", "Hormon direnci", "D vit eksikliği", "Taş", "Böbrek yetmezliği"], c: 1 },
+        { q: "PTH salınımı için en güçlü uyarı?", o: ["Yüksek Ca", "Düşük Ca (Hipokalsemi)", "Yüksek şeker", "Düşük sodyum", "Yüksek pH"], c: 1 },
+        { q: "Kalsitonin kalsiyum seviyesini ne yapar?", o: ["Artırır", "Düşürür", "Etkilemez", "Kemikten çeker", "Sentezler"], c: 1 },
+        { q: "Magnezyum düşüklüğü PTH'ı ne yönde etkiler?", o: ["Artırır", "Salgılanmasını baskılar", "Etkilemez", "Duyarlılığı artırır", "Hiçbiri"], c: 1 },
+        { q: "Paget hastalığı tedavisinde kullanılan hormon?", o: ["PTH", "Kalsitonin", "İnsülin", "Glukagon", "Adrenalin"], c: 1 },
+        { q: "Kemikteki kristal yapının adı nedir?", o: ["Kalsiyum karbonat", "Hidroksiapatit", "Kalsiyum ürat", "Sistin kristali", "Amorf"], c: 1 },
+        { q: "Kemik mineralizasyonunu sağlayan hücre?", o: ["Osteoklast", "Osteoblast", "Lökosit", "Fibroblast", "Nöron"], c: 1 },
 
-        // --- RAS SİSTEMİ (15) ---
-        { q: "Renin nereden salınır?", o: ["Karaciğer", "JG (Jukstaglomerüler) hücreler", "Akciğer", "Beyin", "Kalp"], c: 1 },
-        { q: "Renin anjiyotensinojeni neye çevirir?", o: ["A-II", "A-I", "Aldosteron", "ACE", "Bradikinin"], c: 1 },
-        { q: "ACE enzimi en çok nerede bulunur?", o: ["Karaciğer", "Böbrek", "Akciğer damar endoteli", "Dalak", "Mide"], c: 2 },
-        { q: "Anjiyotensin II etkisi?", o: ["Genişleme", "Güçlü Vazokonstriksiyon", "Yıkım", "Sentez", "Düşürme"], c: 1 },
-        { q: "Anjiyotensin II ne salgılatır?", o: ["Kortizol", "Aldosteron", "Adrenalin", "TSH", "GH"], c: 1 },
-        { q: "Aldosteron sodyumu ne yapar?", o: ["Atar", "Tutar (Geri emer)", "Etkilemez", "Yıkar", "Depolar"], c: 1 },
-        { q: "RAS aktivasyon uyarısı?", o: ["Yüksek tansiyon", "Düşük hacim / basınç / hiponatremi", "Çok tuz", "Şeker", "Oturmak"], c: 1 },
-        { q: "Anjiyotensinojen nerede sentezlenir?", o: ["Böbrek", "Karaciğer", "Akciğer", "Kalp", "Mide"], c: 1 },
-        { q: "Aldosteron potasyumu ne yapar?", o: ["Tutar", "Atar", "Etkilemez", "Sentezler", "Yıkar"], c: 1 },
-        { q: "ANP sistemi ne yapar?", o: ["Uyarır", "İnhibe eder (Zıttır)", "Etkilemez", "Destekler", "Hızlandırır"], c: 1 },
-        { q: "Makula densa neyi algılar?", o: ["Basınç", "Na/Cl miktarını", "Şekeri", "Proteini", "Hormonu"], c: 1 },
-        { q: "Anjiyotensin II susuzluğu ne yapar?", o: ["Azaltır", "Artırır", "Etkilemez", "Bitirir", "Uyutur"], c: 1 },
-        { q: "Conn sendromu nedir?", o: ["Addison", "Hiperaldosteronizm", "Cushing", "Diyabet", "Guatr"], c: 1 },
-        { q: "ACE inhibitörü ne için kullanılır?", o: ["Düşük şeker", "Hipertansiyon tedavisi", "Ateş", "Ağrı", "Öksürük"], c: 1 },
-        { q: "RAS sistemi amacı?", o: ["Şeker düşürmek", "Kan basıncı ve hacmi artırmak", "Kilo vermek", "Kas yapmak", "Uyumak"], c: 1 },
+        // --- RAS SİSTEMİ ---
+        { q: "Renin nereden salgılanır?", o: ["Karaciğer", "Jukstaglomerüler (JG) hücreler", "Akciğer", "Beyin", "Dalak"], c: 1 },
+        { q: "Renin anjiyotensinojeni hangisine çevirir?", o: ["Anjiyotensin II", "Anjiyotensin I", "Aldosteron", "ACE", "Vazopressin"], c: 1 },
+        { q: "ACE enzimi nerede en yoğun bulunur?", o: ["Karaciğer", "Böbrek", "Akciğer damar endoteli", "Dalak", "Kalp"], c: 2 },
+        { q: "Anjiyotensin II'nin damar üzerindeki etkisi?", o: ["Genişleme", "Güçlü Vazokonstriksiyon", "Yıkım", "Etkisizdir", "Gevşeme"], c: 1 },
+        { q: "Anjiyotensin II hangi hormonu salgılatır?", o: ["Kortizol", "Aldosteron", "Adrenalin", "TSH", "GH"], c: 1 },
+        { q: "Aldosteron sodyum iyonlarını ne yapar?", o: ["Atar", "Geri emer (Tutar)", "Etkilemez", "Değiştirmez", "Yıkar"], c: 1 },
+        { q: "RAS sistemini ne aktive eder?", o: ["Yüksek tansiyon", "Düşük hacim / basınç", "Çok tuz", "Fazla su", "Oturma"], c: 1 },
+        { q: "Anjiyotensinojenin sentez yeri neresidir?", o: ["Böbrek", "Karaciğer", "Akciğer", "Kalp", "Beyin"], c: 1 },
+        { q: "Aldosteron potasyumu ne yapar?", o: ["Tutar", "İdrarla atar", "Etkilemez", "Sentezler", "Geri emer"], c: 1 },
+        { q: "ANP'nin RAS üzerine etkisi nedir?", o: ["Sistemi destekler", "Sistemi inhibe eder", "Etkilemez", "ACE'yi uyarır", "Renin artırır"], c: 1 },
+        { q: "Makula densa hücreleri neyi algılar?", o: ["Basıncı", "Sodyum/Klor miktarını", "Glikozu", "Proteini", "Işığı"], c: 1 },
+        { q: "Anjiyotensin II susuzluk hissini ne yapar?", o: ["Azaltır", "Artırır", "Durdurur", "Etkilemez", "Uyutur"], c: 1 },
+        { q: "Conn sendromu neyi ifade eder?", o: ["Hipokortizolizm", "Primer Hiperaldosteronizm", "Hipertiroidi", "Diyabet", "Addison"], c: 1 },
+        { q: "ACE inhibitörleri ne tedavisinde kullanılır?", o: ["Düşük şeker", "Hipertansiyon", "Ateş", "Enfeksiyon", "Alerji"], c: 1 },
+        { q: "RAS sisteminin nihai amacı nedir?", o: ["Tansiyon düşürmek", "Kan basıncı ve hacmini artırmak", "Kilo vermek", "Şeker yakmak", "Uyku"], c: 1 },
 
-        // --- İDRAR FİZİKSEL & KİMYASAL (15) ---
-        { q: "İdrarın normal kehribar rengini veren pigment?", o: ["Bilirubin", "Ürobilin", "Ürokrom", "Hemoglobin", "Porfirin"], c: 2 },
-        { q: "24 saatlik normal idrar hacmi?", o: ["200 ml", "500 ml", "800-2000 ml", "5 L", "10 L"], c: 2 },
-        { q: "İdrar dansitesinin 1.010'da sabit kalması?", o: ["Hipostenüri", "İzostenüri", "Hiperstenüri", "Anüri", "Oligüri"], c: 1 },
-        { q: "İdrarda amonyak kokusu sebebi?", o: ["Şeker", "Bakteriyel yıkım (Üre yıkımı)", "Protein", "Açlık", "Ketozis"], c: 1 },
-        { q: "İdrarda 'Tabut Kapağı' kristali?", o: ["Oksalat", "Ürik asit", "Triple fosfat", "Sistin", "Kolesterol"], c: 2 },
-        { q: "Isıtma-Asetik asit testi neyi ölçer?", o: ["Şeker", "Protein koagülasyonu", "Yağ", "Bilirubin", "İyon"], c: 1 },
-        { q: "Geyik boynuzu (Staghorn) taşı tipi?", o: ["Ürik asit", "Sistin", "Enfeksiyon (Struvit) taşları", "Kalsiyum", "Ksantin"], c: 2 },
-        { q: "İdrar pH alkali olması sebebi?", o: ["Et", "Vejetaryen / Üreaz (+) enfeksiyon", "Açlık", "Diyabet", "Egzersiz"], c: 1 },
-        { q: "Bence-Jones proteini çökme özelliği?", o: ["Soğukta", "40-60 derecede çöker, 100'de çözünür", "Hiç çökmez", "Her zaman çöker", "Renklidir"], c: 1 },
-        { q: "İdrar taşlarının %80'i nedir?", o: ["Ürik asit", "Kalsiyum taşları (Oksalat)", "Sistin", "Magnezyum", "Yağ"], c: 1 },
-        { q: "Ürobilinojen artışı neyi gösterir?", o: ["Tıkanma", "Hemoliz / Karaciğer hasarı", "Normal", "Diyabet", "Taş"], c: 1 },
-        { q: "İdrarda protein > 150 mg/gün?", o: ["Glikozüri", "Proteinüri", "Hematüri", "Oligüri", "Anüri"], c: 1 },
-        { q: "Hyalen silindirler ne zaman görülür?", o: ["Sadece kanser", "Normal / Ağır egzersiz sonrası", "Sadece taş", "Asla görülmez", "Hepatit"], c: 1 },
-        { q: "Hemoglobinüri testi temeli?", o: ["Şeker", "Psödoperoksidaz aktivitesi", "Çökme", "Işık", "Renk"], c: 1 },
-        { q: "İdrarda aseton kokusu?", o: ["Enfeksiyon", "Diyabetik Ketoasidoz", "Normal", "Hepatit", "Taş"], c: 1 }
+        // --- İDRAR FİZİKSEL & KİMYASAL (FİNAL) ---
+        { q: "İdrarın karakteristik rengini veren pigment hangisidir?", o: ["Bilirubin", "Ürobilin", "Ürokrom", "Hemoglobin", "Porfirin"], c: 2 },
+        { q: "Sağlıklı birinde 24 saatlik normal idrar hacmi?", o: ["200 ml", "500 ml", "800-2000 ml", "5 L", "10 L"], c: 2 },
+        { q: "İdrar dansitesinin 1.010'da sabit kalması durumu?", o: ["Hipostenüri", "İzostenüri", "Hiperstenüri", "Anüri", "Oligüri"], c: 1 },
+        { q: "İdrarda bekletme ile oluşan amonyak kokusu?", o: ["Glikozüri", "Bakteriyel üre yıkımı", "Proteinüri", "Ketozis", "Hemoliz"], c: 1 },
+        { q: "İdrar mikroskopisinde 'Tabut Kapağı' kristali hangisidir?", o: ["Oksalat", "Ürat", "Triple fosfat", "Sistin", "Lösin"], c: 2 },
+        { q: "Isıtma-Asetik asit testi ne tespiti içindir?", o: ["Şeker", "Protein koagülasyonu", "Yağ", "Bilirubin", "Kreatinin"], c: 1 },
+        { q: "Geyik boynuzu (Staghorn) taşı hangisidir?", o: ["Ürik asit", "Sistin", "Struvit (Enfeksiyon) taşı", "Kalsiyum", "Kolesterol"], c: 2 },
+        { q: "İdrar pH'sının alkali olma sebebi hangisidir?", o: ["Et ağırlıklı diyet", "Vejetaryen diyet / Enfeksiyon", "Açlık", "Ağır egzersiz", "Ketozis"], c: 1 },
+        { q: "Bence-Jones proteini çökme-çözünme özelliği?", o: ["Sadece soğukta çöker", "40-60°C çöker, 100°C çözünür", "Hiç çökmez", "Daima çökelti verir", "Renk değiştirir"], c: 1 },
+        { q: "İdrar taşlarının büyük çoğunluğu (%80) hangisidir?", o: ["Ürik asit", "Kalsiyum taşları", "Sistin", "Magnezyum", "Ksantin"], c: 1 },
+        { q: "Ürobilinojen artışı neyin göstergesidir?", o: ["Safra yolu tıkanması", "Hemoliz / Karaciğer hasarı", "Normal bulgu", "Böbrek taşı", "Diyabet"], c: 1 },
+        { q: "İdrarda günlük protein miktarının >150 mg olması?", o: ["Glikozüri", "Proteinüri", "Hematüri", "Oligüri", "Poliüri"], c: 1 },
+        { q: "Hyalen silindirler ne zaman görülebilir?", o: ["Daima patolojiktir", "Normal / Ağır egzersiz", "Sadece kanserde", "Sadece diyabette", "Asla görülmez"], c: 1 },
+        { q: "İdrarda kan arama (Hemoglobinüri) testi temeli?", o: ["Redüksiyon", "Psödoperoksidaz aktivitesi", "Çökeltme", "Işık kırılması", "Koku"], c: 1 },
+        { q: "İdrarda aseton (meyve) kokusu hangi hastalıkta olur?", o: ["Hepatit", "Diyabetik Ketoasidoz", "Böbrek yetmezliği", "Gastrit", "Enfeksiyon"], c: 1 }
     ];
 
     let current = 0;
@@ -330,11 +472,10 @@
         document.getElementById("correct-count").innerText = score;
         
         let msg = "";
-        if(score > 180) msg = "mami sen nesin be kardesim helal lan.";
-        else if(score > 150) msg = "mami helal olsun, akmasa da damlar kardeş.";
-        else if(score > 100) msg = "mami fena değil kardesim, geçersin.";
-        else if(score > 60) msg = "mami kafani sikim.";
-        else msg = "mami girme kanka sinava.";
+        if(score > 180) msg = "Mami sen nesin be kardeşim";
+        else if(score > 150) msg = "Mami helal olsun, garanti gibi.";
+        else if(score > 100) msg = "Mami fena değil kardeşim, geçersin.";
+        else msg = "Mami biraz daha asılmamız lazım.";
         document.getElementById("performance-msg").innerText = msg;
     }
 
